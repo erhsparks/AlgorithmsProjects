@@ -54,6 +54,7 @@ class RingBuffer
 
     @start_idx += 1
     @start_idx -= @capacity if @start_idx > @capacity
+
     @length -= 1
     return_val
   end
@@ -64,6 +65,7 @@ class RingBuffer
 
     @start_idx -= 1
     @start_idx += @capacity if @start_idx < 0
+
     @length += 1
     self[0] = val
   end
@@ -86,9 +88,11 @@ class RingBuffer
   def resize!
     new_capacity = 2 * @capacity
     new_store = StaticArray.new(new_capacity)
+
     for i in (0...@length) do
       new_store[i] = self[i]
     end
+
     @store = new_store
     @capacity = new_capacity
     @start_idx = 0
