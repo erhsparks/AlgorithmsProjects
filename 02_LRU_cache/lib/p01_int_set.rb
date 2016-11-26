@@ -53,7 +53,6 @@ class IntSet
   private
 
   def [](num)
-    # optional but useful; return the bucket corresponding to `num`
     @store[num % @store.length]
   end
 
@@ -88,7 +87,6 @@ class ResizingIntSet
   private
 
   def [](num)
-    # optional but useful; return the bucket corresponding to `num`
     @store[num % @store.length]
   end
 
@@ -97,14 +95,14 @@ class ResizingIntSet
   end
 
   def resize!
-    temp = Array.new(@count * 2) { [] }
+    new_store = Array.new(@count * 2) { [] }
 
     @store.each do |bucket|
       bucket.each do |el|
-        temp[el % temp.length] << el
+        new_store[el % new_store.length] << el
       end
     end
 
-    @store = temp
+    @store = new_store
   end
 end
