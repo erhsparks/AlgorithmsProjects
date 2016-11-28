@@ -29,11 +29,11 @@ class LinkedList
   end
 
   def first
-    @head.next
+    empty? ? nil : @head.next
   end
 
   def last
-    @tail.prev
+    empty? ? nil : @tail.prev
   end
 
   def empty?
@@ -51,17 +51,11 @@ class LinkedList
   end
 
   def insert(key, val)
-    new_link = Link.new(key, val)
-
-    if empty?
-      new_link.prev = @head
-      @head.next = new_link
-
-      new_link.next = @tail
-      @tail.prev = new_link
-    elsif include?(key)
+    if include?(key)
       each { |link| link.val = val if link.key == key }
     else
+      new_link = Link.new(key, val)
+
       old_last = @tail.prev
       new_link.prev = old_last
       old_last.next = new_link
@@ -73,19 +67,25 @@ class LinkedList
 
   def remove(key)
     link = find { |current| current.key == key }
-    unless link.nil?
+
+    if link.nil?
+      nil
+    else
       prev_link = link.prev
       next_link = link.next
 
       prev_link.next = next_link
       next_link.prev = prev_link
+
+      link.val
     end
   end
 
   def each
     current = @head.next
+
     until current == @tail
-      yield(current)
+      yield current
       current = current.next
     end
   end

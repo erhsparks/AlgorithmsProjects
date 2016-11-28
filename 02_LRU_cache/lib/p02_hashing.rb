@@ -12,15 +12,14 @@ end
 
 class String
   def hash
-    to_be_hashed = self.chars.hash
+    self.chars.hash
   end
 end
 
 class Hash
   def hash
     to_be_hashed = self.keys + self.values
-    to_be_hashed = to_be_hashed.map(&:to_s).sort
-
-    to_be_hashed.hash
+    
+    to_be_hashed.map(&:to_s).sort.hash
   end
 end

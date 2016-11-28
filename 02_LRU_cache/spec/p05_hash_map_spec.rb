@@ -84,6 +84,17 @@ describe HashMap do
       end
     end
 
+    # the above spec does not pass (even with the solutions given) because hash maps are unordered.  The spec below, however, is from the regular curriculum LRU cache project and passes because it checks that all k,v pairs are returned.
+
+    it "enumerates over all the items and yields key-value pairs" do
+      goal = [[:first, 1], [:second, 2], [:third, 3]]
+      result = []
+      hash.each do |k, v|
+        result << [k, v]
+      end
+      expect(result.sort).to eq(goal)
+    end
+
     it "includes Enumerable module" do
       expect(hash.class.ancestors).to include(Enumerable)
     end
