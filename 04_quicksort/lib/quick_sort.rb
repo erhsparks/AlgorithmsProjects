@@ -20,7 +20,7 @@ class QuickSort
      end
     end
 
-    QuickSort.sort1(left) + [pivot] + QuickSort.sort1(right)
+    sort1(left) + [pivot] + sort1(right)
   end
 
   # In-place.
@@ -29,11 +29,16 @@ class QuickSort
 
     prc ||= Proc.new { |a, b| a <=> b }
 
-    pivot_idx = QuickSort.partition(array, start, length, &prc)
+    pivot_idx = partition(array, start, length, &prc)
 
-    QuickSort.sort2!(array, start, pivot_idx - start, &prc)
-    QuickSort.sort2!(array, pivot_idx, length - 1 - pivot_idx, &prc)
-    # seems like it would be more efficient to start at pivot_idx + 1, but the specs for worst case expect the extra comparsions of the pivot with itself...
+    length_left = pivot_idx - start
+    length_right = (length - 1) - length_left
+
+    start_left = start
+    start_right = pivot_idx + 1
+
+    sort2!(array, start_left, length_left, &prc)
+    sort2!(array, start_right, length_right, &prc)
   end
 
   def self.partition(array, start, length, &prc)
