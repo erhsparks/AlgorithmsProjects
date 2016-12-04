@@ -112,10 +112,31 @@ class BinarySearchTree
   end
 
   def self.delete_min!(node)
+    return nil unless node
 
+    if node.left
+      node.left = self.delete_min!(node.left)
+
+      node
+    else
+      node.right
+    end
   end
 
   def self.delete!(node, value)
+    return nil unless node
 
+    case value <=> node.value
+    when -1
+      node.left = self.delete!(node.left, value)
+
+      node
+    when 0
+      node.right
+    when 1
+      node.right = self.delete!(node.right, value)
+
+      node
+    end
   end
 end
