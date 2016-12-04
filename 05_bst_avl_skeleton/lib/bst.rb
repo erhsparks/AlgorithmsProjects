@@ -11,43 +11,47 @@ end
 
 class BinarySearchTree
   def initialize
-
+    @root = nil
   end
 
   def insert(value)
-
+    if @root
+      BinarySearchTree.insert!(@root, value)
+    else
+      @root = BSTNode.new(value)
+    end
   end
 
   def find(value)
-
+    BinarySearchTree.find!(@root, value)
   end
 
   def inorder
-
+    BinarySearchTree.inorder!(@root)
   end
 
   def postorder
-
+    BinarySearchTree.postorder!(@root)
   end
 
   def preorder
-
+    BinarySearchTree.preorder!(@root)
   end
 
   def height
-
+    BinarySearchTree.height!(@root)
   end
 
   def min
-
+    BinarySearchTree.min(@root)
   end
 
   def max
-
+    BinarySearchTree.max(@root)
   end
 
   def delete(value)
-
+    BinarySearchTree.delete!(@root, value)
   end
 
   def self.insert!(node, value)
@@ -78,15 +82,30 @@ class BinarySearchTree
   end
 
   def self.preorder!(node)
+    return [] unless node
 
+    left = self.preorder!(node.left)
+    right = self.preorder!(node.right)
+
+    [node.value] + left + right
   end
 
   def self.inorder!(node)
+    return [] unless node
 
+    left = self.inorder!(node.left)
+    right = self.inorder!(node.right)
+
+    left + [node.value] + right
   end
 
   def self.postorder!(node)
+    return [] unless node
 
+    left = self.postorder!(node.left)
+    right = self.postorder!(node.right)
+
+    left + right + [node.value]
   end
 
   def self.height!(node)
