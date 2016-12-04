@@ -51,7 +51,18 @@ class BinarySearchTree
   end
 
   def self.insert!(node, value)
+    return BSTNode.new(value) if node.nil?
 
+    case value <=> node.value
+    when -1, 0
+      left = self.insert!(node.left, value)
+      node.left ||= left
+    else
+      right = self.insert!(node.right, value)
+      node.right ||= right
+    end
+
+    node
   end
 
   def self.find!(node, value)
@@ -75,11 +86,15 @@ class BinarySearchTree
   end
 
   def self.max(node)
+    return nil unless node
 
+    self.max(node.right) || node
   end
 
   def self.min(node)
+    return nil unless node
 
+    self.min(node.left) || node
   end
 
   def self.delete_min!(node)
