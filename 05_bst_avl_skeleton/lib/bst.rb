@@ -3,7 +3,9 @@ class BSTNode
   attr_reader :value
 
   def initialize(value)
-
+    @value = value
+    @left = nil
+    @right = nil
   end
 end
 
