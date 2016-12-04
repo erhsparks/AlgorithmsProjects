@@ -66,7 +66,15 @@ class BinarySearchTree
   end
 
   def self.find!(node, value)
+    return nil unless node
+    return node if node.value == value
 
+    case value <=> node.value
+    when -1, 0
+      self.find!(node.left, value)
+    else
+      self.find!(node.right, value)
+    end
   end
 
   def self.preorder!(node)
@@ -82,7 +90,13 @@ class BinarySearchTree
   end
 
   def self.height!(node)
+    return -1 unless node
+    return 0 unless node.left || node.right
 
+    left = self.height!(node.left) + 1
+    right = self.height!(node.right) + 1
+
+    left >= right ? left : right
   end
 
   def self.max(node)
