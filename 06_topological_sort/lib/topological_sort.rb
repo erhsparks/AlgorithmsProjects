@@ -2,7 +2,35 @@ require_relative 'graph'
 
 # Implementing topological sort using both Khan's and Tarian's algorithms
 
-def topological_sort(vertices)
+
+# Tarian:
+
+def tarian_topological_sort(vertices)
+  sorted = []
+  visited = Set.new
+
+  vertices.each do |vertex|
+    dfs!(vertex, visited, sorted) unless visited.include?(vertex)
+  end
+
+  sorted
+end
+
+def dfs!(vertex, visited, sorted)
+  visited.add(vertex)
+
+  vertex.out_edges.each do |edge|
+    child = edge.to_vertex
+    dfs!(child, visited, sorted) unless visited.include?(child)
+  end
+
+  sorted.unshift(vertex)
+end
+
+
+# Khan:
+
+def khan_topological_sort(vertices)
   in_counts, to_sort = initialize_edge_counts(vertices)
 
   sorted = []
