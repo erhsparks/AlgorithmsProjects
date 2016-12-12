@@ -10,7 +10,14 @@ class DPProblems
 
   # Takes in a positive integer n and returns the nth Fibonacci number
   # Should run in O(n) time
-  def fibonacci(n)
+  def fibonacci(n, fibs = {1 => 1, 2 => 1})
+    return nil if n <= 0
+    return fibs[n] if fibs[n]
+
+    fib = fibonacci(n - 1, fibs) + fibonacci(n - 2, fibs)
+    fibs[n] = fib
+
+    fib
   end
 
   # Make Change: write a function that takes in an amount and a set of coins.  Return the minimum number of coins
@@ -18,6 +25,25 @@ class DPProblems
   # If it's not possible to make change for a given amount, return nil.  You may assume that the coin array is sorted
   # and in ascending order.
   def make_change(amt, coins, coin_cache = {0 => 0})
+    return coin_cache[amt] if coin_cache[amt]
+    return 0.0/0.0 if amt < coins[0]
+
+    min = amt
+    change_possible = false
+    coins.each do |coin|
+      next if coin > amt
+
+      test_change = make_change(amt - coin, coins, coin_cache) + 1
+      if test_change.integer? && test_change < min
+        change_possible = true
+        min = test_change
+      end
+    end
+
+    min = 0.0/0.0 unless change_possible
+    coin_cache[amt] = min
+
+    min
   end
 
   # Knapsack Problem: write a function that takes in an array of weights, an array of values, and a weight capacity
@@ -26,6 +52,31 @@ class DPProblems
   # to include are items 0 and 1, whose values are 10 and 4 respectively.  Duplicates are not allowed -- that is, you
   # can only include a particular item once.
   def knapsack(weights, values, capacity)
+    values_table = []
+
+    for i in (0..capacity) do
+      values_table[i] = []
+      for j in (0...weights.count) do
+        if i == 0
+          values_table[i][j] = 0
+        else
+          current_weight = weights[j]
+          current_capacity = i
+
+          current_best = values_table[current_capacity][j - 1]
+
+          if current_weight > current_capacity
+            test_diff = j.zero? ? 0 : values_table[current_capacity - current_weight][j - 1]
+            test_best = test_diff + current_weight
+            current_best = test_best if test_best > current_best
+          end
+
+          values_table[i][j] = current_best
+        end
+      end
+    end
+
+    values_table.last.last
   end
 
   # Stair Climber: a frog climbs a set of stairs.  It can jump 1 step, 2 steps, or 3 steps at a time.
@@ -34,12 +85,14 @@ class DPProblems
   # NB: this is similar to, but not the same as, make_change.  Try implementing this using the opposite
   # DP technique that you used in make_change -- bottom up if you used top down and vice versa.
   def stair_climb(n)
+
   end
 
   # String Distance: given two strings, str1 and str2, calculate the minimum number of operations to change str1 into
   # str2.  Allowed operations are deleting a character ("abc" -> "ac", e.g.), inserting a character ("abc" -> "abac", e.g.),
   # and changing a single character into another ("abc" -> "abz", e.g.).
   def str_distance(str1, str2)
+
   end
 
   # Maze Traversal: write a function that takes in a maze (represented as a 2D matrix) and a starting
@@ -50,5 +103,6 @@ class DPProblems
   #             ['x', 'x', ' ', 'x']]
   # and the start is [1, 1], then the shortest escape route is [[1, 1], [1, 2], [2, 2]] and thus your function should return 3.
   def maze_escape(maze, start)
+
   end
 end
