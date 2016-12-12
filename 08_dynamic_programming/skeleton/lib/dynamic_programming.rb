@@ -84,8 +84,21 @@ class DPProblems
   # For example, with 3 steps, your function should return [[1, 1, 1], [1, 2], [2, 1], [3]].
   # NB: this is similar to, but not the same as, make_change.  Try implementing this using the opposite
   # DP technique that you used in make_change -- bottom up if you used top down and vice versa.
-  def stair_climb(n)
+  def stair_climb(n, step_sizes = [1, 2, 3], poss_steps = { 0 => [[]] })
+    (1..n).each do |current_step|
+      poss_steps[current_step] = []
 
+      step_sizes.each do |next_step|
+        last_counts = current_step - next_step
+        next if last_counts < 0
+
+        poss_steps[last_counts].each do |count|
+          poss_steps[current_step] += [count + [next_step]]
+        end
+      end
+    end
+
+    poss_steps[n]
   end
 
   # String Distance: given two strings, str1 and str2, calculate the minimum number of operations to change str1 into
