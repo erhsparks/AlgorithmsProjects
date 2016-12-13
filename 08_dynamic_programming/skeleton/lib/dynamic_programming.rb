@@ -104,8 +104,31 @@ class DPProblems
   # String Distance: given two strings, str1 and str2, calculate the minimum number of operations to change str1 into
   # str2.  Allowed operations are deleting a character ("abc" -> "ac", e.g.), inserting a character ("abc" -> "abac", e.g.),
   # and changing a single character into another ("abc" -> "abz", e.g.).
-  def str_distance(str1, str2)
+  def str_distance(str1, str2, dist_cache = Hash.new { |hash, key| hash[key] = {} })
+    return dist_cache[str1][str2] if dist_cache[str1][str2]
 
+    l1, l2 = str1.length, str2.length
+
+    if str1 == ""
+      count = str2.length
+    elsif str2 == ""
+      count = str1.length
+    elsif str1[0] == str2[0]
+      count = str_distance(str1.slice(1, l1), str2.slice(1, l2), dist_cache)
+    else
+      test1 = str_distance(str1.slice(1, l1), str2.slice(1, l2), dist_cache)
+
+      if l1 > l2
+        test2 = str_distance(str1.slice(1, l1), str2, dist_cache)
+      else
+        test2 = str_distance(str1, str2.slice(1, l2), dist_cache)
+      end
+
+      count = 1 + [test1, test2].min
+    end
+
+    dist_cache[str1][str2] = count
+    count
   end
 
   # Maze Traversal: write a function that takes in a maze (represented as a 2D matrix) and a starting
