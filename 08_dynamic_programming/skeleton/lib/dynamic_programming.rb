@@ -138,7 +138,58 @@ class DPProblems
   #             ['x', ' ', ' ', 'x'],
   #             ['x', 'x', ' ', 'x']]
   # and the start is [1, 1], then the shortest escape route is [[1, 1], [1, 2], [2, 2]] and thus your function should return 3.
-  def maze_escape(maze, start)
+  def maze_escape(maze, start, path_cache = Hash.new { |hash, key| hash[key] = {} })
+    row, col = start[0], start[1]
 
+    return path_cache[row][col] if path_cache[row][col]
+
+    if at_edge?(maze, row, col)
+      path_cache[row][col] = 1
+      return path_cache[row][col]
+    end
+
+    test_moves = get_test_moves(maze, row, col)
+    best_count = nil
+
+    test_moves.each do |test_move|
+      test_maze = place_test_move(maze, test_move)
+      new_count = maze_escape(test_maze, test_move, path_cache)
+
+      if new_count && (best_count.nil? || new_count < best_count)
+        best_count = 1 + new_count
+      end
+    end
+
+    path_cache[row][col] = best_count
+    path_cache[row][col]
+  end
+
+  def at_edge?(maze, row, col)
+    row == 0 || row == maze.length - 1 || col == 0 || col == maze[0].length - 1
+  end
+
+  def get_test_moves(maze, row, col)
+    test_moves = []
+
+    test_moves << [row - 1, col] if row - 1 >= 0 && maze[row - 1][col] == ' '
+    test_moves << [row + 1, col] if row + 1 < maze.length && maze[row + 1][col] == ' '
+    test_moves << [row, col - 1] if col - 1 >= 0 && maze[row][col - 1] == ' '
+    test_moves << [row, col + 1] if col + 1 < maze[0].length && maze[row][col + 1] == ' '
+
+    test_moves
+  end
+
+  def place_test_move(maze, test_move)
+    test_maze = []
+    maze.each_with_index do |row, r|
+      test_maze << []
+      row.each_with_index do |symbol, c|
+        test_maze[r][c] = symbol
+      end
+    end
+
+    test_maze[test_move[0]][test_move[1]] = 'M'
+
+    test_maze
   end
 end
