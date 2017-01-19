@@ -54,24 +54,26 @@ class DPProblems
   def knapsack(weights, values, capacity)
     values_table = []
 
-    for i in (0..capacity) do
-      values_table[i] = []
-      for j in (0...weights.count) do
-        if i == 0
-          values_table[i][j] = 0
+    (0..capacity).each do |cap|
+      values_table[cap] = []
+
+      (0...weights.count).each do |item|
+        weight = weights[item]
+        value = values[item]
+
+        if cap == 0
+          values_table[cap][item] = 0
+        elsif item == 0
+          values_table[cap][item] = (weight > cap) ? 0 : value
         else
-          current_weight = weights[j]
-          current_capacity = i
+          best = values_table[cap][item - 1]
 
-          current_best = values_table[current_capacity][j - 1]
-
-          if current_weight > current_capacity
-            test_diff = j.zero? ? 0 : values_table[current_capacity - current_weight][j - 1]
-            test_best = test_diff + current_weight
-            current_best = test_best if test_best > current_best
+          if weight <= cap
+            test = values_table[cap - weight][item - 1] + value
+            best = test if test > best
           end
-
-          values_table[i][j] = current_best
+          
+          values_table[cap][item] = best
         end
       end
     end
@@ -79,6 +81,7 @@ class DPProblems
     values_table.last.last
   end
 
+    
   # Stair Climber: a frog climbs a set of stairs.  It can jump 1 step, 2 steps, or 3 steps at a time.
   # Write a function that returns all the possible ways the frog can get from the bottom step to step n.
   # For example, with 3 steps, your function should return [[1, 1, 1], [1, 2], [2, 1], [3]].
